@@ -18,6 +18,7 @@ import log from 'loglevel';
 import TrezorKeyring from 'eth-trezor-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
+import BitBox02Keyring from 'eth-bitbox02-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
@@ -679,6 +680,7 @@ export default class MetamaskController extends EventEmitter {
         keyringOverrides?.trezor || TrezorKeyring,
         keyringOverrides?.ledger || LedgerBridgeKeyring,
         keyringOverrides?.lattice || LatticeKeyring,
+        keyringOverrides?.bitbox02 || BitBox02Keyring,
         QRHardwareKeyring,
       ];
       additionalKeyrings = additionalKeyringTypes.map((keyringType) =>
@@ -2591,6 +2593,7 @@ export default class MetamaskController extends EventEmitter {
       simpleKeyPair: simpleKeyPairAccounts
         .filter((item, pos) => simpleKeyPairAccounts.indexOf(item) === pos)
         .map((address) => toChecksumHexAddress(address)),
+      bitbox02: [],
       ledger: [],
       trezor: [],
       lattice: [],
@@ -2764,6 +2767,9 @@ export default class MetamaskController extends EventEmitter {
       case HardwareDeviceNames.trezor:
         keyringName = keyringOverrides?.trezor?.type || TrezorKeyring.type;
         break;
+      case HardwareDeviceNames.bitbox02:
+          keyringName = keyringOverrides?.trezor?.type || BitBox02Keyring.type;
+          break;
       case HardwareDeviceNames.ledger:
         keyringName =
           keyringOverrides?.ledger?.type || LedgerBridgeKeyring.type;
@@ -2811,7 +2817,7 @@ export default class MetamaskController extends EventEmitter {
   }
 
   /**
-   * Fetch account list from a trezor device.
+   * Fetch account list from a hardware device.
    *
    * @param deviceName
    * @param page
@@ -3311,6 +3317,14 @@ export default class MetamaskController extends EventEmitter {
     const keyring = await this.keyringController.getKeyringForAccount(address);
 
     switch (keyring.type) {
+      case KeyringType.bitbox02: {
+        return new Promise((_, reject) => {
+          reject(
+            new Error('BitBox02 does not support eth_getEncryptionPublicKey.'),
+          );
+        });
+      }
+
       case KeyringType.ledger: {
         return new Promise((_, reject) => {
           reject(
@@ -4388,6 +4402,13 @@ export default class MetamaskController extends EventEmitter {
     );
     if (trezorKeyring) {
       trezorKeyring.dispose();
+    }
+
+    const [bitbox02Keyring] = this.keyringController.getKeyringsByType(
+      KeyringType.bitbox02,
+    );
+    if (bitbox02Keyring) {
+      bitbox02Keyring.dispose();
     }
 
     const [ledgerKeyring] = this.keyringController.getKeyringsByType(

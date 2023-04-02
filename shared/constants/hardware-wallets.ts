@@ -5,6 +5,7 @@ export enum HardwareKeyringType {
   ledger = 'Ledger Hardware',
   trezor = 'Trezor Hardware',
   lattice = 'Lattice Hardware',
+  bitbox02 = 'BitBox02 Hardware',
   qr = 'QR Hardware Wallet Device',
 }
 
@@ -12,6 +13,7 @@ export enum HardwareKeyringNames {
   ledger = 'Ledger',
   trezor = 'Trezor',
   lattice = 'Lattice1',
+  bitbox02 = 'BitBox02',
   qr = 'QR',
 }
 
@@ -19,6 +21,7 @@ export enum HardwareDeviceNames {
   ledger = 'ledger',
   trezor = 'trezor',
   lattice = 'lattice',
+  bitbox02 = 'bitbox02',
   qr = 'QR Hardware',
 }
 
@@ -35,6 +38,7 @@ export enum HardwareAffiliateLinks {
   trezor = 'https://shop.trezor.io/product/trezor-one-black?offer_id=35&aff_id=11009',
   keystone = 'https://shop.keyst.one/?rfsn=6088257.656b3e9&utm_source=refersion&utm_medium=affiliate&utm_campaign=6088257.656b3e9',
   airgap = 'https://airgap.it/',
+  bitbox02 = 'https://shiftcrypto.ch/bitbox02/',
   coolwallet = 'https://www.coolwallet.io/',
   dcent = 'https://dcentwallet.com/',
 }
