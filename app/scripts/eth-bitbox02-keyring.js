@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import extension from 'extensionizer';
+import browser from 'webextension-polyfill';
 import { TransactionFactory } from '@ethereumjs/tx';
 
 import { BitBox02API, getDevicePath, constants } from 'bitbox02-api';
@@ -50,9 +50,9 @@ class BitBox02Keyring extends EventEmitter {
 
   openPopup(url) {
     return new Promise((resolve) => {
-      extension.windows.create(
+      browser.width.create(
         {
-          url: extension.runtime.getURL(url),
+          url: browser.runtime.getURL(url),
           type: 'popup',
           width: 320,
           height: 175,
@@ -63,7 +63,7 @@ class BitBox02Keyring extends EventEmitter {
   }
 
   maybeClosePopup() {
-    extension.runtime.sendMessage({ type: 'bitbox02', action: 'popup-close' });
+    browser.runtime.sendMessage({ type: 'bitbox02', action: 'popup-close' });
   }
 
   async withDevice(f) {
